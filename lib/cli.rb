@@ -1,5 +1,4 @@
 
-
 class Cli
   attr_reader :instream, :outstream
 
@@ -17,6 +16,4 @@ class Cli
   def process_commands
 
   end
-
-
 end
