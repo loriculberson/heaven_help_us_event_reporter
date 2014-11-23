@@ -1,11 +1,15 @@
-
+require_relative 'printer'
+require_relative 'load'
 class Cli
-  attr_reader :instream, :outstream
+  attr_reader :instream, :outstream, :printer
+  attr_accessor :criteria, :command
 
   def initialize(instream, outstream)
     @command = ""
     @instream = instream
     @outstream = outstream
+    @criteria = []
+    @printer = Printer.new(outstream)
   end
 
   def call
@@ -14,16 +18,16 @@ class Cli
       user_input
       process_commands
     end
-    puts "you got here"
+    puts "GOODBYE!!!!"
   end
 
   def process_commands
-     case
-     when load?
-      puts "You got some loaded files"
+    case
+    when load? then Load.new(instream, outstream, command, criteria, printer).call #now we can build the load class
     when find?
       puts "You found some files"
-     end
+    when quit?
+    end
   end
 
   def quit?
@@ -39,6 +43,17 @@ class Cli
   end
 
   def user_input
-    @command = gets.strip.downcase
+    print "Enter Command: "
+    input = instream.gets.strip.downcase.split(" ")
+    self.criteria_input(input)
+    self.command_input(input)
+  end
+
+  def criteria_input(input)
+    input[1..-1]
+  end
+
+  def command_input(input)
+    input[0]
   end
 end
